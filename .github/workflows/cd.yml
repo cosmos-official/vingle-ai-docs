@@ -1,0 +1,70 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [document-changed]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Issue Github App Token
+        uses: actions/create-github-app-token@v1
+        id: app_token
+        with:
+          app-id: ${{ secrets.VINGLE_GITHUB_APP_ID }}
+          private-key: ${{ secrets.VINGLE_GITHUB_APP_SECRET}}
+          owner: ${{ github.repository_owner }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy documents
+        run: |
+          git clone --depth 1 --filter=blob:none --sparse https://x-access-token:${{ steps.app_token.outputs.token }}@github.com/cosmos-official/vingle-backend temp-repo
+          cd temp-repo
+          git sparse-checkout set docs
+          mkdir -p ../src/content/
+          mv docs ../src/content/
+          cd ..
+          rm -rf temp-repo
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Cache Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Astro Site
+        run: npm run build
+
+      - name: Upload as an artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy Pages
+        uses: actions/deploy-pages@v4
