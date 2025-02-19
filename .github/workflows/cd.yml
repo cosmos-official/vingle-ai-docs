@@ -30,8 +30,7 @@ jobs:
           git clone --depth 1 --filter=blob:none --sparse https://x-access-token:${{ steps.app_token.outputs.token }}@github.com/cosmos-official/vingle-backend temp-repo
           cd temp-repo
           git sparse-checkout set docs
-          mkdir -p ../src/content/
-          mv docs ../src/content/
+          mv docs/* ../src/content/docs
           cd ..
           rm -rf temp-repo
 

@@ -8,14 +8,17 @@ export default defineConfig({
 	site: 'https://docs.vingle.kr',
 	integrations: [
 		starlight({
-			editLink: {
-				baseUrl: 'https://github.com/cosmos-official/vingle-backend/edit/dev/docs',
-			},
 			title: 'Vingle Backend Docs',
 			social: {
 				github: 'https://github.com/cosmos-official/vingle-backend',
 			},
-			sidebar: sidebar
+			sidebar: [
+				{
+					label: "Home",
+					link: "/",
+				},
+				...sidebar
+			]
 		})
 	],
 });
