@@ -1,0 +1,35 @@
+---
+import { Icon } from "@astrojs/starlight/components";
+const { data } = Astro.locals.starlightRoute.entry;
+---
+
+<h1 id={"_top"}>{data.title}</h1>
+
+{ data.author? 
+    <a href=`https://github.com/${data.author}` target="_blank">
+        <span>작성:</span>
+        <Icon name="github"></Icon>
+        <span>{data.author}</span>
+    </a>
+    :
+    <></>
+}
+
+<style>
+    h1 {
+        margin-top: 1rem;
+        font-size: var(--sl-text-h1);
+        line-height: var(--sl-line-height-headings);
+        font-weight: 600;
+        color: var(--sl-color-white);
+    }
+
+    a {
+        text-decoration: none;
+        color: var(--sl-color-gray-3);
+        margin-top: 0 !important;
+        display: inline-flex;
+        align-items: center; /* 수직 중앙 정렬 */
+        gap: 4px; /* 아이콘과 텍스트 사이 간격 */
+    }
+</style>

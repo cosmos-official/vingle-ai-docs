@@ -18,7 +18,10 @@ export default defineConfig({
 					link: "/",
 				},
 				...sidebar
-			]
+			],
+			components: {
+				PageTitle: './src/layouts/PageTitleOverride.astro'
+			}
 		})
 	],
 });
