@@ -1,0 +1,13 @@
+/* Markmap SVG responsive sizing */
+svg.markmap {
+  width: 100% !important; /* fill the container */
+  height: auto !important; /* keep aspect ratio */
+  min-height: 400px;       /* ensure reasonable default */
+}
+
+/* Optional: flex container if svg inside pre */
+pre:has(> svg.markmap) {
+  padding: 0;        /* remove code block padding */
+  background: none;  /* remove code block background */
+  overflow: visible;
+} 
