@@ -3,6 +3,7 @@ svg.markmap {
   width: 100% !important; /* fill the container */
   height: auto !important; /* keep aspect ratio */
   min-height: 400px;       /* ensure reasonable default */
+  border: 1px solid #e0e0e0;
 }
 
 /* Optional: flex container if svg inside pre */

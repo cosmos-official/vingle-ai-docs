@@ -8,11 +8,16 @@ import remarkMarkmap from 'remark-markmap';
 export default defineConfig({
 	site: 'https://docs.vingle.kr',
 	markdown: {
-		remarkPlugins: [remarkMarkmap]
+		remarkPlugins: [
+			[remarkMarkmap,
+				{
+					darkThemeSelector: () => document.documentElement.matches('.dark') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+				}]
+		]
 	},
 	integrations: [
 		starlight({
-			title: 'Vingle Backend Docs',
+			title: 'Vingle dev docs',
 			social: {
 				github: 'https://github.com/cosmos-official/vingle-backend',
 			},
