@@ -10,26 +10,89 @@ hero:
   image:
     file: ../../assets/vingle.png
   actions:
-    - text: API 문서
-      link: https://api-docs.vingle.kr
+    - text: 링크를 사용할 수 있습니다
+      link: /
       icon: external
 
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
+## 시작
+
+#### Repository 변수 설정
+- `TARGET_REPOSITORY`: 문서화 대상 Repository 이름을 지정합니다.
+  - 해당 레포지터리의 `/docs` 폴더가 문서화되어 공개됩니다.
+
+#### 변경 전파 설정
+
+다음 Github Actions workflow를 복사 후, 하단의 `{DOCUMENT_REPOSITORY}`를 문서 위치로 수정합니다.  
+실행 트리거(on)은 자유롭게 수정할 수 있습니다.
+
+```yaml
+name: Document changed trigger
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Github Token
+        uses: actions/create-github-app-token@v2
+        id: app_token
+        with:
+          app-id: ${{ secrets.SUBMODULE_APP_ID }}
+          private-key: ${{ secrets.SUBMODULE_APP_PEM }}
+          owner: ${{ github.repository_owner }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check for changes in docs/
+        id: docs_changes
+        run: |
+          if git diff --quiet HEAD^ HEAD -- docs/; then
+            echo "No changes in docs/."
+            echo "changed=false" >> $GITHUB_ENV
+          else
+            echo "Changes detected in docs/."
+            echo "changed=true" >> $GITHUB_ENV
+          fi
+
+      - name: Dispatch document changed event
+        if: env.changed == 'true'
+        run: |
+          curl -X POST -H "Accept: application/vnd.github.v3+json" \
+          -H "Authorization: Bearer ${{ steps.app_token.outputs.token }}" \
+          https://api.github.com/repos/cosmos-official/{DOCUMENT_REPOSITORY}/dispatches \
+          -d '{"event_type": "document-changed"}'
+```
+
+
+### 문서 작성
+타겟 레포지터리의 `/docs`에 문서를 작성합니다.
+- `/docs/index.mdx`를 작성하는 경우, 배포 시 이 페이지가 오버라이드 됩니다.
+
 ## 문서 관리
 
 <CardGrid stagger>
 	<Card title="문서 작성" icon="add-document">
-        [vingle-backend/docs](https://github.com/cosmos-official/vingle-backend/tree/dev/docs)에 마크다운 문서를 작성합니다<br/>
-        작성된 문서는 자동으로 동기화됩니다
+    [대상 Repository](/)에 마크다운 문서를 작성합니다<br/>
+    작성된 문서는 자동으로 동기화됩니다
 	</Card>
 	<Card title="문서 수정" icon="pencil">
-        [vingle-backend/docs](https://github.com/cosmos-official/vingle-backend/tree/dev/docs)에서 수정합니다<br/>
+    [대상 Repository](/)에서 문서를 수정합니다<br/>
 		수정된 문서는 자동으로 동기화됩니다
 	</Card>
 	<Card title="검색" icon="magnifier">
 		검색 기능을 활용해 궁금한 내용을 검색할 수 있습니다
 	</Card>
 </CardGrid>
+
