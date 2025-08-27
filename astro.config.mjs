@@ -4,9 +4,13 @@ import starlight from '@astrojs/starlight';
 import { sidebar } from './src/utils/generateSidebar';
 import remarkMarkmap from 'remark-markmap';
 
+const DOCUMENT_URL = 'https://docs.vingle.kr';
+const DOCUMENT_TITLE = 'vingle-backend dev docs';
+const TARGET_REPOSITORY = 'vingle-backend';
+
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://docs.vingle.kr',
+	site: DOCUMENT_URL,
 	markdown: {
 		remarkPlugins: [
 			[remarkMarkmap,
@@ -17,10 +21,10 @@ export default defineConfig({
 	},
 	integrations: [
 		starlight({
-			title: 'Vingle dev docs',
-			social: {
-				github: 'https://github.com/cosmos-official/vingle-backend',
-			},
+			title: DOCUMENT_TITLE,
+			social: [
+				{ icon: 'github', label: 'GitHub', href: `https://github.com/cosmos-official/${TARGET_REPOSITORY}` },
+			],
 			sidebar: [
 				{
 					label: "Home",

@@ -34,6 +34,21 @@ jobs:
           cd ..
           rm -rf temp-repo
 
+      - name: Update astro config with variables
+        run: |
+          if [ -n "${{ vars.DOCUMENT_URL }}" ]; then
+            sed -i "s/const DOCUMENT_DOMAIN = '.*';/const DOCUMENT_DOMAIN = '${{ vars.DOCUMENT_URL }}';/" astro.config.mjs
+            echo "DOCUMENT_DOMAIN updated to ${{ vars.DOCUMENT_URL }}"
+          fi
+          if [ -n "${{ vars.DOCUMENT_TITLE }}" ]; then
+            sed -i "s/const DOCUMENT_TITLE = '.*';/const DOCUMENT_TITLE = '${{ vars.DOCUMENT_TITLE }}';/" astro.config.mjs
+            echo "DOCUMENT_TITLE updated to ${{ vars.DOCUMENT_TITLE }}"
+          fi
+          if [ -n "${{ vars.TARGET_REPOSITORY }}" ]; then
+            sed -i "s/const TARGET_REPOSITORY = '.*';/const TARGET_REPOSITORY = '${{ vars.TARGET_REPOSITORY }}';/" astro.config.mjs
+            echo "TARGET_REPOSITORY updated to ${{ vars.TARGET_REPOSITORY }}"
+          fi
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:

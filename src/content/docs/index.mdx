@@ -23,6 +23,11 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 #### Repository 변수 설정
 - `TARGET_REPOSITORY`: 문서화 대상 Repository 이름을 지정합니다.
   - 해당 레포지터리의 `/docs` 폴더가 문서화되어 공개됩니다.
+- `DOCUMENT_URL`: 문서의 기본 주소를 적습니다. 
+  - 없으면 기본값 `docs.vingle.kr`이 사용됩니다.
+  - URL 형태 (`https://example.com`) 이어야 합니다.
+- `DOCUMENT_TITLE`: 문서 상단에 표시되는 제목을 적습니다.
+  - 없으면 기본값 `vingle-backend dev docs`가 사용됩니다.
 
 #### 변경 전파 설정
 
