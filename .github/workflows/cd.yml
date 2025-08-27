@@ -27,7 +27,7 @@ jobs:
 
       - name: Copy documents
         run: |
-          git clone --depth 1 --filter=blob:none --sparse https://x-access-token:${{ steps.app_token.outputs.token }}@github.com/cosmos-official/vingle-backend temp-repo
+          git clone --depth 1 --filter=blob:none --sparse https://x-access-token:${{ steps.app_token.outputs.token }}@github.com/cosmos-official/${{ vars.TARGET_REPOSITORY }} temp-repo
           cd temp-repo
           git sparse-checkout set docs
           mv docs/* ../src/content/docs
